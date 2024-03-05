@@ -13,3 +13,7 @@ INSERT INTO CODE VALUES ('01', '내과', '진료과목코드');
 INSERT INTO CODE VALUES ('02', '안과', '진료과목코드');
 INSERT INTO CODE VALUES ('D', '약처방', '진료과목코드');
 INSERT INTO CODE VALUES ('T', '검사', '진료과목코드');
+
+INSERT INTO HOSPITAL (name, organization_id, director_name) VALUES ('인천병원', '1111111111', '손흥민');
+INSERT INTO HOSPITAL (name, organization_id, director_name) VALUES ('서울병원', '2222222222', '황희찬');
+INSERT INTO HOSPITAL (name, organization_id, director_name) VALUES ('경기병원', '3333333333', '김민재');
