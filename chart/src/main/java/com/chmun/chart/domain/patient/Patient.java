@@ -80,5 +80,12 @@ public class Patient {
     public String getPhone() {
         return phone;
     }
+
+    public void update(String name, String gender, String birthday, String phone) {
+        this.name = name;
+        this.gender = gender;
+        this.birthday = birthday;
+        this.phone = phone;
+    }
 }
 
