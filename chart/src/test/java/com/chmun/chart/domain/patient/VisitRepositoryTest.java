@@ -2,6 +2,7 @@ package com.chmun.chart.domain.patient;
 
 import com.chmun.chart.domain.hospital.Hospital;
 import com.chmun.chart.domain.hospital.HospitalRepository;
+import com.chmun.chart.util.DateUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-public class PatientRepositoryTest {
-
+public class VisitRepositoryTest {
     @Autowired
     private TestEntityManager entityManager;
 
@@ -22,9 +22,11 @@ public class PatientRepositoryTest {
     @Autowired
     private PatientRepository patientRepository;
 
-    @Test
-    public void test_환자_저장_조회() {
+    @Autowired
+    private VisitRepository visitRepository;
 
+    @Test
+    public void test_환자_방문_저장_조회() {
         // given
         Hospital hospital = hospitalRepository.findById(Long.valueOf(1)).orElse(null);
         if (hospital == null) {
@@ -44,12 +46,20 @@ public class PatientRepositoryTest {
         );
         patient = patientRepository.save(patient);
 
+        Visit visit = new Visit(
+                null,
+                hospital,
+                patient,
+                DateUtil.convertToLocalDate("2024-03-05"),
+                "1"
+        );
+        visit = visitRepository.save(visit);
+
         // when
-        Patient foundPatient = patientRepository.findById(patient.getPatientId()).orElse(null);
+        Visit foundVisit = visitRepository.findById(Long.valueOf(1)).orElse(null);
 
         // then
-        assertThat(foundPatient).isNotNull();
-        assertThat(foundPatient.getName()).isEqualTo("테스트");
-        assertThat(foundPatient.getHospital().getDirectorName()).isEqualTo("매디슨");
+        assertThat(foundVisit).isNotNull();
+        assertThat(foundVisit.getVisitDate()).isEqualTo("2024-03-05");
     }
 }
