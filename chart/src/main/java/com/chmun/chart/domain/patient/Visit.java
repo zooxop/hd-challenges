@@ -1,6 +1,7 @@
 package com.chmun.chart.domain.patient;
 
 import com.chmun.chart.domain.hospital.Hospital;
+import com.chmun.chart.util.DateUtil;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -58,5 +59,10 @@ public class Visit {
 
     public String getVisitCode() {
         return visitCode;
+    }
+
+    public void update(String visitDate, String visitCode) {
+        this.visitDate = DateUtil.convertToLocalDate(visitDate);
+        this.visitCode = visitCode;
     }
 }
