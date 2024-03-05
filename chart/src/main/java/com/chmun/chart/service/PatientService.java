@@ -8,7 +8,9 @@ import com.chmun.chart.dto.error.ErrorMsgDto;
 import com.chmun.chart.dto.patient.PatientRequestDto;
 import com.chmun.chart.dto.patient.PatientResponseDto;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,6 +53,7 @@ public class PatientService {
         return new PatientResponseDto(patient);
     }
 
+    @Transactional
     public ErrorMsgDto save(PatientRequestDto dto) {
         ErrorMsgDto msg;
 
@@ -62,12 +65,22 @@ public class PatientService {
 
         Hospital hospital = hospitalOptional.get();
 
+        // 해당 병원의 가장 마지막 차트번호 + 1
+        Long newChartId = patientRepository.getNextChartId(hospital.getHospitalId());
+
+        // (해당 병원의) 차트번호가 최초로 발생하는 경우
+        if (newChartId == 1) {
+            // 현재년도 4자리 + 5자리 숫자
+            // e.g.) 202400001
+            newChartId = Long.parseLong(Year.now().getValue() + "00001");
+        }
+
         try {
             Patient newData = new Patient(
                     null,
                     hospital,
                     dto.getName(),
-                    dto.getChartId(),
+                    newChartId.toString(),
                     dto.getGender(),
                     dto.getBirthday(),
                     dto.getPhone()
