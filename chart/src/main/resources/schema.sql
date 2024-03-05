@@ -26,3 +26,15 @@ CREATE TABLE HOSPITAL
     director_name VARCHAR(10) NOT NULL,
     PRIMARY KEY (hospital_id)
 );
+
+CREATE TABLE PATIENT
+(
+    patient_id BIGINT NOT NULL AUTO_INCREMENT,
+    hospital_id BIGINT NOT NULL,
+    name VARCHAR(45) NOT NULL,
+    chart_id VARCHAR(13) NOT NULL,
+    gender VARCHAR(10) NOT NULL,
+    birthday VARCHAR(10),
+    phone VARCHAR(20),
+    PRIMARY KEY (patient_id, hospital_id)
+);
