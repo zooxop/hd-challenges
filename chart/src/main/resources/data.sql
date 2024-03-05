@@ -28,3 +28,10 @@ INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone) VALUE
 INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone) VALUES (1, '테스트', '201900092', 'M', '2016-11-11', null);  -- 8
 INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone) VALUES (1, '테스트', '201900093', 'F', '1922-11-11', null);  -- 9
 INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone) VALUES (1, '테스트', '201900094', 'F', '1922-11-11', null);  -- 10
+
+INSERT INTO VISIT (hospital_id, patient_id, visit_date, visit_code) VALUES (1, 4, '2020-01-01', '1');
+INSERT INTO VISIT (hospital_id, patient_id, visit_date, visit_code) VALUES (1, 6, '2020-01-01', '2');
+INSERT INTO VISIT (hospital_id, patient_id, visit_date, visit_code) VALUES (1, 7, '2020-01-01', '2');
+INSERT INTO VISIT (hospital_id, patient_id, visit_date, visit_code) VALUES (1, 8, '2020-01-01', '2');
+INSERT INTO VISIT (hospital_id, patient_id, visit_date, visit_code) VALUES (1, 9, '2020-01-01', '1');
+INSERT INTO VISIT (hospital_id, patient_id, visit_date, visit_code) VALUES (1, 10, '2020-01-01', '2');

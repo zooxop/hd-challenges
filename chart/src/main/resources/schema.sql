@@ -38,3 +38,13 @@ CREATE TABLE PATIENT
     phone VARCHAR(20),
     PRIMARY KEY (patient_id, hospital_id)
 );
+
+CREATE TABLE VISIT
+(
+    visit_id BIGINT NOT NULL AUTO_INCREMENT,
+    hospital_id BIGINT NOT NULL,
+    patient_id BIGINT NOT NULL,
+    visit_date DATE NOT NULL,
+    visit_code VARCHAR(10) NOT NULL,
+    PRIMARY KEY (visit_id)
+);
