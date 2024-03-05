@@ -1,0 +1,1 @@
+INSERT INTO HOSPITAL (name, organization_id, director_name) VALUES ('유닛테스트병원', '1111111111', '매디슨');
