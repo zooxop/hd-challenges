@@ -1,6 +1,8 @@
 package com.chmun.chart.web;
 
 import com.chmun.chart.dto.error.ErrorMsgDto;
+import com.chmun.chart.dto.patient.PatientListRequestDto;
+import com.chmun.chart.dto.patient.PatientListResponseDto;
 import com.chmun.chart.dto.patient.PatientRequestDto;
 import com.chmun.chart.dto.patient.PatientResponseDto;
 import com.chmun.chart.service.PatientService;
@@ -19,6 +21,11 @@ public class PatientController {
     @GetMapping("/api/v1/patient/all")
     public List<PatientResponseDto> findAll() {
         return patientService.findAll();
+    }
+
+    @PostMapping("/api/v1/patient/list")
+    public List<PatientListResponseDto> getList(@RequestBody PatientListRequestDto dto) {
+        return patientService.getList(dto.getHospitalId());
     }
 
     @GetMapping("/api/v1/patient/{id}")

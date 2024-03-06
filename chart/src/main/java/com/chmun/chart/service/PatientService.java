@@ -1,31 +1,38 @@
 package com.chmun.chart.service;
 
+import com.chmun.chart.domain.code.Code;
+import com.chmun.chart.domain.code.CodeGroup;
+import com.chmun.chart.domain.code.CodeGroupRepository;
 import com.chmun.chart.domain.hospital.Hospital;
 import com.chmun.chart.domain.hospital.HospitalRepository;
 import com.chmun.chart.domain.patient.Patient;
 import com.chmun.chart.domain.patient.PatientRepository;
 import com.chmun.chart.dto.error.ErrorMsgDto;
+import com.chmun.chart.dto.patient.PatientListResponseDto;
 import com.chmun.chart.dto.patient.PatientRequestDto;
 import com.chmun.chart.dto.patient.PatientResponseDto;
+import com.chmun.chart.util.DateUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Year;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PatientService {
     private final PatientRepository patientRepository;
     private final HospitalRepository hospitalRepository;
+    private final CodeGroupRepository codeRepository;
 
     public PatientService(
             PatientRepository patientRepository,
-            HospitalRepository hospitalRepository
+            HospitalRepository hospitalRepository,
+            CodeGroupRepository codeRepository
     ) {
         this.patientRepository = patientRepository;
         this.hospitalRepository = hospitalRepository;
+        this.codeRepository = codeRepository;
     }
 
     public List<PatientResponseDto> findAll() {
@@ -51,6 +58,55 @@ public class PatientService {
         Patient patient = patientOptional.get();
 
         return new PatientResponseDto(patient);
+    }
+
+    public List<PatientListResponseDto> getList(Long hospitalId) {
+        List<PatientListResponseDto> responseDtoList = new ArrayList<>();
+
+        Hospital hospital = hospitalRepository.findById(hospitalId).orElse(null);
+        if (hospital == null) {
+            return responseDtoList;
+        }
+
+        // 해당 병원의 환자 데이터 모두 가져오기
+        List<Patient> patientList = patientRepository.findByHospitalAndUseYn(hospital, "Y");
+        if (patientList.isEmpty()) {
+            return responseDtoList;
+        }
+
+        // 성별 코드 치환하기
+        // e.g.) M->남, F->여
+        CodeGroup codeGroup = codeRepository.findAllByCodeGroup("성별코드");
+        Map<String, String> genderCodeNameMap = codeGroup.getCodeSet().stream()
+                        .collect(Collectors.toMap(Code::getCode, Code::getCodeName));
+
+
+        for (Patient patient: patientList) {
+            // 성별 코드 이름을 Map 에서 가져오기
+            String genderCodeName = genderCodeNameMap.getOrDefault(patient.getGender(), "모름");
+
+            // 방문일자를 최신순으로 정렬하여 가장 최근 날짜를 가져온다.
+            String lastVisitDate;
+            if (!patient.getVisitList().isEmpty()) {
+                patient.getVisitList().sort((visit1, visit2) -> visit2.getVisitDate().compareTo(visit1.getVisitDate()));
+                lastVisitDate = DateUtil.convertToString(patient.getVisitList().get(0).getVisitDate());
+            } else {
+                lastVisitDate = null;
+            }
+
+            PatientListResponseDto dto = new PatientListResponseDto(
+                    patient.getName(),
+                    patient.getChartId(),
+                    genderCodeName,
+                    patient.getBirthday(),
+                    patient.getPhone(),
+                    lastVisitDate
+            );
+
+            responseDtoList.add(dto);
+        }
+
+        return responseDtoList;
     }
 
     @Transactional

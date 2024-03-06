@@ -34,4 +34,6 @@ INSERT INTO VISIT (hospital_id, patient_id, visit_date, visit_code) VALUES (1, 6
 INSERT INTO VISIT (hospital_id, patient_id, visit_date, visit_code) VALUES (1, 7, '2020-01-01', '2');
 INSERT INTO VISIT (hospital_id, patient_id, visit_date, visit_code) VALUES (1, 8, '2020-01-01', '2');
 INSERT INTO VISIT (hospital_id, patient_id, visit_date, visit_code) VALUES (1, 9, '2020-01-01', '1');
-INSERT INTO VISIT (hospital_id, patient_id, visit_date, visit_code) VALUES (1, 10, '2020-01-01', '2');
+INSERT INTO VISIT (hospital_id, patient_id, visit_date, visit_code) VALUES (1, 10, '2023-01-01', '3');  -- 최근 방문일 정렬 기능 테스트를 위해, 같은 환자의 데이터를 3개 넣음.
+INSERT INTO VISIT (hospital_id, patient_id, visit_date, visit_code) VALUES (1, 10, '2023-06-01', '3');
+INSERT INTO VISIT (hospital_id, patient_id, visit_date, visit_code) VALUES (1, 10, '2024-03-05', '2');
