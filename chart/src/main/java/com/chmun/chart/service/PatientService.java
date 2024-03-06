@@ -1,29 +1,38 @@
 package com.chmun.chart.service;
 
+import com.chmun.chart.domain.code.Code;
+import com.chmun.chart.domain.code.CodeGroup;
+import com.chmun.chart.domain.code.CodeGroupRepository;
 import com.chmun.chart.domain.hospital.Hospital;
 import com.chmun.chart.domain.hospital.HospitalRepository;
 import com.chmun.chart.domain.patient.Patient;
 import com.chmun.chart.domain.patient.PatientRepository;
 import com.chmun.chart.dto.error.ErrorMsgDto;
+import com.chmun.chart.dto.patient.PatientListResponseDto;
 import com.chmun.chart.dto.patient.PatientRequestDto;
 import com.chmun.chart.dto.patient.PatientResponseDto;
+import com.chmun.chart.util.DateUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.Year;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PatientService {
     private final PatientRepository patientRepository;
     private final HospitalRepository hospitalRepository;
+    private final CodeGroupRepository codeRepository;
 
     public PatientService(
             PatientRepository patientRepository,
-            HospitalRepository hospitalRepository
+            HospitalRepository hospitalRepository,
+            CodeGroupRepository codeRepository
     ) {
         this.patientRepository = patientRepository;
         this.hospitalRepository = hospitalRepository;
+        this.codeRepository = codeRepository;
     }
 
     public List<PatientResponseDto> findAll() {
@@ -41,7 +50,7 @@ public class PatientService {
 
     public PatientResponseDto findById(Long id) {
 
-        Optional<Patient> patientOptional = patientRepository.findById(id);
+        Optional<Patient> patientOptional = patientRepository.findByPatientIdAndUseYn(id, "Y");
         if (patientOptional.isEmpty()) {
             return new PatientResponseDto();
         }
@@ -51,6 +60,56 @@ public class PatientService {
         return new PatientResponseDto(patient);
     }
 
+    public List<PatientListResponseDto> getList(Long hospitalId) {
+        List<PatientListResponseDto> responseDtoList = new ArrayList<>();
+
+        Hospital hospital = hospitalRepository.findById(hospitalId).orElse(null);
+        if (hospital == null) {
+            return responseDtoList;
+        }
+
+        // 해당 병원의 환자 데이터 모두 가져오기
+        List<Patient> patientList = patientRepository.findByHospitalAndUseYn(hospital, "Y");
+        if (patientList.isEmpty()) {
+            return responseDtoList;
+        }
+
+        // 성별 코드 치환하기
+        // e.g.) M->남, F->여
+        CodeGroup codeGroup = codeRepository.findAllByCodeGroup("성별코드");
+        Map<String, String> genderCodeNameMap = codeGroup.getCodeSet().stream()
+                        .collect(Collectors.toMap(Code::getCode, Code::getCodeName));
+
+
+        for (Patient patient: patientList) {
+            // 성별 코드 이름을 Map 에서 가져오기
+            String genderCodeName = genderCodeNameMap.getOrDefault(patient.getGender(), "모름");
+
+            // 방문일자를 최신순으로 정렬하여 가장 최근 날짜를 가져온다.
+            String lastVisitDate;
+            if (!patient.getVisitList().isEmpty()) {
+                patient.getVisitList().sort((visit1, visit2) -> visit2.getVisitDate().compareTo(visit1.getVisitDate()));
+                lastVisitDate = DateUtil.convertToString(patient.getVisitList().get(0).getVisitDate());
+            } else {
+                lastVisitDate = null;
+            }
+
+            PatientListResponseDto dto = new PatientListResponseDto(
+                    patient.getName(),
+                    patient.getChartId(),
+                    genderCodeName,
+                    patient.getBirthday(),
+                    patient.getPhone(),
+                    lastVisitDate
+            );
+
+            responseDtoList.add(dto);
+        }
+
+        return responseDtoList;
+    }
+
+    @Transactional
     public ErrorMsgDto save(PatientRequestDto dto) {
         ErrorMsgDto msg;
 
@@ -62,15 +121,27 @@ public class PatientService {
 
         Hospital hospital = hospitalOptional.get();
 
+        // 해당 병원의 가장 마지막 차트번호 + 1
+        Long newChartId = patientRepository.getNextChartId(hospital.getHospitalId());
+
+        // (해당 병원의) 차트번호가 최초로 발생하는 경우
+        if (newChartId == 1) {
+            // 현재년도 4자리 + 5자리 숫자
+            // e.g.) 202400001
+            newChartId = Long.parseLong(Year.now().getValue() + "00001");
+        }
+
         try {
             Patient newData = new Patient(
                     null,
                     hospital,
                     dto.getName(),
-                    dto.getChartId(),
+                    newChartId.toString(),
                     dto.getGender(),
                     dto.getBirthday(),
-                    dto.getPhone()
+                    dto.getPhone(),
+                    dto.getUseYn(),
+                    null
             );
 
             patientRepository.save(newData);
@@ -122,7 +193,8 @@ public class PatientService {
 
         Patient patient = patientOptional.get();
         try {
-            patientRepository.delete(patient);
+            patient.delete();  // use_yn 플래그 값을 'N' 으로 변경
+            patientRepository.save(patient);
             msg = new ErrorMsgDto("success", "환자 정보 삭제 성공.");
         } catch (Exception e) {
             msg = new ErrorMsgDto("error", "환자 정보 삭제 실패. :: " + e.getMessage());

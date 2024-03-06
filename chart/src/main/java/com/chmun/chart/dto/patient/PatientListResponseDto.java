@@ -1,40 +1,36 @@
 package com.chmun.chart.dto.patient;
 
-public class PatientRequestDto {
-    private Long hospitalId;
+public class PatientListResponseDto {
+
     private String name;
     private String chartId;
     private String gender;
     private String birthday;
     private String phone;
-    private String useYn;
+    private String lastVisitDate;
 
-    public PatientRequestDto(
-            Long hospitalId,
+    public PatientListResponseDto(
             String name,
             String chartId,
             String gender,
             String birthday,
             String phone,
-            String useYn
+            String lastVisitDate
     ) {
-        this.hospitalId = hospitalId;
         this.name = name;
         this.chartId = chartId;
         this.gender = gender;
         this.birthday = birthday;
         this.phone = phone;
-        this.useYn = useYn;
+        this.lastVisitDate = lastVisitDate;
     }
-
-    public Long getHospitalId() {
-        return hospitalId;
-    }
-
-    public String getChartId() { return chartId; }
 
     public String getName() {
         return name;
+    }
+
+    public String getChartId() {
+        return chartId;
     }
 
     public String getGender() {
@@ -49,5 +45,7 @@ public class PatientRequestDto {
         return phone;
     }
 
-    public String getUseYn() { return useYn; }
+    public String getLastVisitDate() {
+        return lastVisitDate;
+    }
 }

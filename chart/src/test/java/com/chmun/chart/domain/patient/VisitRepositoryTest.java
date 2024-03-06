@@ -42,7 +42,9 @@ public class VisitRepositoryTest {
                 "202400123",
                 "M",
                 "1996-07-26",
-                "010-1111-2222"
+                "010-1111-2222",
+                "Y",
+                null
         );
         patient = patientRepository.save(patient);
 
