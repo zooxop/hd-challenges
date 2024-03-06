@@ -3,6 +3,8 @@ package com.chmun.chart.domain.patient;
 import com.chmun.chart.domain.hospital.Hospital;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "patient")
 public class Patient {
@@ -34,6 +36,9 @@ public class Patient {
     @Column(name = "use_yn")
     private String useYn;
 
+    @OneToMany(mappedBy = "patientId", fetch = FetchType.LAZY)
+    private List<Visit> visitList;
+
     public Patient() {
 
     }
@@ -46,7 +51,8 @@ public class Patient {
             String gender,
             String birthday,
             String phone,
-            String useYn
+            String useYn,
+            List<Visit> visitList
     ) {
         this.patientId = patientId;
         this.hospital = hospital;
@@ -56,6 +62,7 @@ public class Patient {
         this.birthday = birthday;
         this.phone = phone;
         this.useYn = useYn;
+        this.visitList = visitList;
     }
 
     public Long getPatientId() {
@@ -87,6 +94,10 @@ public class Patient {
     }
 
     public String getUseYn() { return useYn; }
+
+    public List<Visit> getVisitList() {
+        return visitList;
+    }
 
     public void update(String name, String gender, String birthday, String phone) {
         this.name = name;

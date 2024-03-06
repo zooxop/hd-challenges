@@ -43,7 +43,7 @@ public class PatientService {
 
     public PatientResponseDto findById(Long id) {
 
-        Optional<Patient> patientOptional = patientRepository.findById(id);
+        Optional<Patient> patientOptional = patientRepository.findByPatientIdAndUseYn(id, "Y");
         if (patientOptional.isEmpty()) {
             return new PatientResponseDto();
         }
@@ -84,7 +84,8 @@ public class PatientService {
                     dto.getGender(),
                     dto.getBirthday(),
                     dto.getPhone(),
-                    dto.getUseYn()
+                    dto.getUseYn(),
+                    null
             );
 
             patientRepository.save(newData);
