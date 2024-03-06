@@ -39,6 +39,7 @@ CREATE TABLE PATIENT
     gender VARCHAR(10) NOT NULL,
     birthday VARCHAR(10),
     phone VARCHAR(20),
+    use_yn VARCHAR(2) NOT NULL,
     PRIMARY KEY (patient_id, hospital_id)
 );
 

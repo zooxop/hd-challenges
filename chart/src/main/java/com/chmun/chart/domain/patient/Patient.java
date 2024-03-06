@@ -31,6 +31,9 @@ public class Patient {
     @Column(name = "phone")
     private String phone;
 
+    @Column(name = "use_yn")
+    private String useYn;
+
     public Patient() {
 
     }
@@ -42,7 +45,8 @@ public class Patient {
             String chartId,
             String gender,
             String birthday,
-            String phone
+            String phone,
+            String useYn
     ) {
         this.patientId = patientId;
         this.hospital = hospital;
@@ -51,6 +55,7 @@ public class Patient {
         this.gender = gender;
         this.birthday = birthday;
         this.phone = phone;
+        this.useYn = useYn;
     }
 
     public Long getPatientId() {
@@ -81,11 +86,17 @@ public class Patient {
         return phone;
     }
 
+    public String getUseYn() { return useYn; }
+
     public void update(String name, String gender, String birthday, String phone) {
         this.name = name;
         this.gender = gender;
         this.birthday = birthday;
         this.phone = phone;
+    }
+
+    public void delete() {
+        this.useYn = "N";
     }
 }
 

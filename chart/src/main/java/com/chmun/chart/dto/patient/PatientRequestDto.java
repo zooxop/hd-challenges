@@ -7,6 +7,7 @@ public class PatientRequestDto {
     private String gender;
     private String birthday;
     private String phone;
+    private String useYn;
 
     public PatientRequestDto(
             Long hospitalId,
@@ -14,7 +15,8 @@ public class PatientRequestDto {
             String chartId,
             String gender,
             String birthday,
-            String phone
+            String phone,
+            String useYn
     ) {
         this.hospitalId = hospitalId;
         this.name = name;
@@ -22,6 +24,7 @@ public class PatientRequestDto {
         this.gender = gender;
         this.birthday = birthday;
         this.phone = phone;
+        this.useYn = useYn;
     }
 
     public Long getHospitalId() {
@@ -45,4 +48,6 @@ public class PatientRequestDto {
     public String getPhone() {
         return phone;
     }
+
+    public String getUseYn() { return useYn; }
 }

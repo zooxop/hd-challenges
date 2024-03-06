@@ -10,6 +10,7 @@ public class PatientResponseDto {
     private String gender;
     private String birthday;
     private String phone;
+    private String useYn;
 
     public PatientResponseDto() {
         this.patientId = null;
@@ -19,6 +20,7 @@ public class PatientResponseDto {
         this.gender = null;
         this.birthday = null;
         this.phone = null;
+        this.useYn = null;
     }
 
     public PatientResponseDto(Patient patient) {
@@ -29,6 +31,7 @@ public class PatientResponseDto {
         this.gender = patient.getGender();
         this.birthday = patient.getBirthday();
         this.phone = patient.getPhone();
+        this.useYn = patient.getUseYn();
     }
 
     public Long getHospitalId() { return hospitalId; }
@@ -52,4 +55,6 @@ public class PatientResponseDto {
     public String getPhone() {
         return phone;
     }
+
+    public String getUseYn() { return useYn; }
 }

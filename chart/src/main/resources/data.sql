@@ -18,16 +18,16 @@ INSERT INTO HOSPITAL (name, organization_id, director_name) VALUES ('인천병�
 INSERT INTO HOSPITAL (name, organization_id, director_name) VALUES ('서울병원', '2222222222', '황희찬');
 INSERT INTO HOSPITAL (name, organization_id, director_name) VALUES ('경기병원', '3333333333', '김민재');
 
-INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone) VALUES (1, '테스트', '201900085', 'X', null, null);  -- 1
-INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone) VALUES (1, '테스트', '201900086', 'M', '1985-11-11', null);  -- 2
-INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone) VALUES (1, '테스트', '201900087', 'X', null, null);  -- 3
-INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone) VALUES (1, '테스트', '201900088', 'M', '1922-11-11', null);  -- 4
-INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone) VALUES (1, '테스트', '201900089', 'M', '2005-11-23', '010-1111-2222');  -- 5
-INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone) VALUES (1, '테스트', '201900090', 'M', '2016-11-11', null);  -- 6
-INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone) VALUES (1, '테스트', '201900091', 'M', '2015-11-11', null);  -- 7
-INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone) VALUES (1, '테스트', '201900092', 'M', '2016-11-11', null);  -- 8
-INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone) VALUES (1, '테스트', '201900093', 'F', '1922-11-11', null);  -- 9
-INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone) VALUES (1, '테스트', '201900094', 'F', '1922-11-11', null);  -- 10
+INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone, use_yn) VALUES (1, '테스트', '201900085', 'X', null, null, 'Y');  -- 1
+INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone, use_yn) VALUES (1, '테스트', '201900086', 'M', '1985-11-11', null, 'Y');  -- 2
+INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone, use_yn) VALUES (1, '테스트', '201900087', 'X', null, null, 'Y');  -- 3
+INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone, use_yn) VALUES (1, '테스트', '201900088', 'M', '1922-11-11', null, 'Y');  -- 4
+INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone, use_yn) VALUES (1, '테스트', '201900089', 'M', '2005-11-23', '010-1111-2222', 'Y');  -- 5
+INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone, use_yn) VALUES (1, '테스트', '201900090', 'M', '2016-11-11', null, 'Y');  -- 6
+INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone, use_yn) VALUES (1, '테스트', '201900091', 'M', '2015-11-11', null, 'Y');  -- 7
+INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone, use_yn) VALUES (1, '테스트', '201900092', 'M', '2016-11-11', null, 'Y');  -- 8
+INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone, use_yn) VALUES (1, '테스트', '201900093', 'F', '1922-11-11', null, 'Y');  -- 9
+INSERT INTO PATIENT (hospital_id, name, chart_id, gender, birthday, phone, use_yn) VALUES (1, '테스트', '201900094', 'F', '1922-11-11', null, 'Y');  -- 10
 
 INSERT INTO VISIT (hospital_id, patient_id, visit_date, visit_code) VALUES (1, 4, '2020-01-01', '1');
 INSERT INTO VISIT (hospital_id, patient_id, visit_date, visit_code) VALUES (1, 6, '2020-01-01', '2');

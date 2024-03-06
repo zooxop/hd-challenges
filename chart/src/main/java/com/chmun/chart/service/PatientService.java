@@ -83,7 +83,8 @@ public class PatientService {
                     newChartId.toString(),
                     dto.getGender(),
                     dto.getBirthday(),
-                    dto.getPhone()
+                    dto.getPhone(),
+                    dto.getUseYn()
             );
 
             patientRepository.save(newData);
@@ -135,7 +136,8 @@ public class PatientService {
 
         Patient patient = patientOptional.get();
         try {
-            patientRepository.delete(patient);
+            patient.delete();  // use_yn 플래그 값을 'N' 으로 변경
+            patientRepository.save(patient);
             msg = new ErrorMsgDto("success", "환자 정보 삭제 성공.");
         } catch (Exception e) {
             msg = new ErrorMsgDto("error", "환자 정보 삭제 실패. :: " + e.getMessage());
