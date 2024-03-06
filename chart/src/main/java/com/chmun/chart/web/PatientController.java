@@ -23,11 +23,6 @@ public class PatientController {
         return patientService.findAll();
     }
 
-    @PostMapping("/api/v1/patient/list")
-    public List<PatientListResponseDto> getList(@RequestBody PatientListRequestDto dto) {
-        return patientService.getList(dto.getHospitalId());
-    }
-
     @GetMapping("/api/v1/patient/{id}")
     public PatientResponseDto findById(@PathVariable Long id) {
         return patientService.findById(id);
@@ -47,4 +42,11 @@ public class PatientController {
     public ErrorMsgDto delete(@PathVariable Long id) {
         return patientService.delete(id);
     }
+
+    @PostMapping("/api/v1/patient/list")
+    public List<PatientListResponseDto> getList(@RequestBody PatientListRequestDto dto) {
+        return patientService.getList(dto.getHospitalId());
+    }
+
+
 }
