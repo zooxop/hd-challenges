@@ -61,52 +61,35 @@ public class PatientService {
     }
 
     public List<PatientListResponseDto> getList(Long hospitalId) {
-        List<PatientListResponseDto> responseDtoList = new ArrayList<>();
 
         Hospital hospital = hospitalRepository.findById(hospitalId).orElse(null);
         if (hospital == null) {
-            return responseDtoList;
+            return new ArrayList<>();
         }
 
         // 해당 병원의 환자 데이터 모두 가져오기
         List<Patient> patientList = patientRepository.findByHospitalAndUseYn(hospital, "Y");
         if (patientList.isEmpty()) {
-            return responseDtoList;
+            return new ArrayList<>();
         }
 
-        // 성별 코드 치환하기
-        // e.g.) M->남, F->여
-        CodeGroup codeGroup = codeRepository.findAllByCodeGroup("성별코드");
-        Map<String, String> genderCodeNameMap = codeGroup.getCodeSet().stream()
-                        .collect(Collectors.toMap(Code::getCode, Code::getCodeName));
+        return makePatientListResponseDto(patientList);
+    }
 
+    public List<PatientListResponseDto> search(Long hospitalId, String name, String chartId, String birthday) {
 
-        for (Patient patient: patientList) {
-            // 성별 코드 이름을 Map 에서 가져오기
-            String genderCodeName = genderCodeNameMap.getOrDefault(patient.getGender(), "모름");
-
-            // 방문일자를 최신순으로 정렬하여 가장 최근 날짜를 가져온다.
-            String lastVisitDate;
-            if (!patient.getVisitList().isEmpty()) {
-                patient.getVisitList().sort((visit1, visit2) -> visit2.getVisitDate().compareTo(visit1.getVisitDate()));
-                lastVisitDate = DateUtil.convertToString(patient.getVisitList().get(0).getVisitDate());
-            } else {
-                lastVisitDate = null;
-            }
-
-            PatientListResponseDto dto = new PatientListResponseDto(
-                    patient.getName(),
-                    patient.getChartId(),
-                    genderCodeName,
-                    patient.getBirthday(),
-                    patient.getPhone(),
-                    lastVisitDate
-            );
-
-            responseDtoList.add(dto);
+        Hospital hospital = hospitalRepository.findById(hospitalId).orElse(null);
+        if (hospital == null) {
+            return new ArrayList<>();
         }
 
-        return responseDtoList;
+        List<Patient> patientList = patientRepository.findPatient(hospital, name, chartId, birthday, "Y");
+        if (patientList.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // Patient 리스트를 PatientListResponseDto 리스트로 만들어서 리턴.
+        return makePatientListResponseDto(patientList);
     }
 
     @Transactional
@@ -154,6 +137,7 @@ public class PatientService {
         return msg;
     }
 
+    @Transactional
     public ErrorMsgDto update(Long id, PatientRequestDto newData) {
         ErrorMsgDto msg;
 
@@ -201,5 +185,44 @@ public class PatientService {
         }
 
         return msg;
+    }
+
+    // Patient 리스트를 PatientListResponseDto 리스트로 만들어서 리턴.
+    private List<PatientListResponseDto> makePatientListResponseDto(List<Patient> patientList) {
+        List<PatientListResponseDto> responseDtoList = new ArrayList<>();
+
+        // 성별 코드 치환하기
+        // e.g.) M->남, F->여
+        CodeGroup codeGroup = codeRepository.findAllByCodeGroup("성별코드");
+        Map<String, String> genderCodeNameMap = codeGroup.getCodeSet().stream()
+                .collect(Collectors.toMap(Code::getCode, Code::getCodeName));
+
+
+        for (Patient patient: patientList) {
+            // 성별 코드 이름을 Map 에서 가져오기
+            String genderCodeName = genderCodeNameMap.getOrDefault(patient.getGender(), "모름");
+
+            // 방문일자를 최신순으로 정렬하여 가장 최근 날짜를 가져온다.
+            String lastVisitDate;
+            if (!patient.getVisitList().isEmpty()) {
+                patient.getVisitList().sort((visit1, visit2) -> visit2.getVisitDate().compareTo(visit1.getVisitDate()));
+                lastVisitDate = DateUtil.convertToString(patient.getVisitList().get(0).getVisitDate());
+            } else {
+                lastVisitDate = null;
+            }
+
+            PatientListResponseDto dto = new PatientListResponseDto(
+                    patient.getName(),
+                    patient.getChartId(),
+                    genderCodeName,
+                    patient.getBirthday(),
+                    patient.getPhone(),
+                    lastVisitDate
+            );
+
+            responseDtoList.add(dto);
+        }
+
+        return responseDtoList;
     }
 }

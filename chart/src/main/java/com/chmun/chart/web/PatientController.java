@@ -48,5 +48,13 @@ public class PatientController {
         return patientService.getList(dto.getHospitalId());
     }
 
-
+    @PostMapping("/api/v1/patient/search")
+    public List<PatientListResponseDto> searchPatient(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "chartId", required = false) String chartId,
+            @RequestParam(value = "birthday", required = false) String birthday,
+            @RequestBody PatientListRequestDto dto
+    ) {
+        return patientService.search(dto.getHospitalId(), name, chartId, birthday);
+    }
 }
