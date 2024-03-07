@@ -57,13 +57,9 @@ public class PatientController {
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
             @RequestBody PatientListRequestDto dto
     ) {
-        // pageNo 0 이하 값 입력 방지
-        if (pageNo <= 0) {
+        // pageNo, pageSize 0 이하 값 입력 방지
+        if (pageNo <= 0 || pageSize <= 0) {
             pageNo = 1;
-        }
-
-        // pageSize 0 이하 값 입력 방지
-        if (pageSize <= 0) {
             pageSize = 10;
         }
 
