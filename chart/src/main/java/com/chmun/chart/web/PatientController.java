@@ -23,11 +23,6 @@ public class PatientController {
         return patientService.findAll();
     }
 
-    @PostMapping("/api/v1/patient/list")
-    public List<PatientListResponseDto> getList(@RequestBody PatientListRequestDto dto) {
-        return patientService.getList(dto.getHospitalId());
-    }
-
     @GetMapping("/api/v1/patient/{id}")
     public PatientResponseDto findById(@PathVariable Long id) {
         return patientService.findById(id);
@@ -46,5 +41,20 @@ public class PatientController {
     @DeleteMapping("/api/v1/patient/delete/{id}")
     public ErrorMsgDto delete(@PathVariable Long id) {
         return patientService.delete(id);
+    }
+
+    @PostMapping("/api/v1/patient/list")
+    public List<PatientListResponseDto> getList(@RequestBody PatientListRequestDto dto) {
+        return patientService.getList(dto.getHospitalId());
+    }
+
+    @PostMapping("/api/v1/patient/search")
+    public List<PatientListResponseDto> searchPatient(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "chartId", required = false) String chartId,
+            @RequestParam(value = "birthday", required = false) String birthday,
+            @RequestBody PatientListRequestDto dto
+    ) {
+        return patientService.search(dto.getHospitalId(), name, chartId, birthday);
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
-public interface PatientRepository extends JpaRepository<Patient, Long> {
+public interface PatientRepository extends JpaRepository<Patient, Long>, PatientRepositoryCustom {
     @Query("SELECT COALESCE(MAX(CAST(p.chartId AS long)), 0) + 1 FROM Patient p where p.hospital.hospitalId = :hospitalId")
     Long getNextChartId(Long hospitalId);
 
