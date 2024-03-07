@@ -12,6 +12,9 @@ import com.chmun.chart.dto.patient.PatientListResponseDto;
 import com.chmun.chart.dto.patient.PatientRequestDto;
 import com.chmun.chart.dto.patient.PatientResponseDto;
 import com.chmun.chart.util.DateUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,20 +79,21 @@ public class PatientService {
         return makePatientListResponseDto(patientList);
     }
 
-    public List<PatientListResponseDto> search(Long hospitalId, String name, String chartId, String birthday) {
+    public List<PatientListResponseDto> search(Long hospitalId, String name, String chartId, String birthday, int pageNo, int pageSize) {
 
         Hospital hospital = hospitalRepository.findById(hospitalId).orElse(null);
         if (hospital == null) {
             return new ArrayList<>();
         }
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
 
-        List<Patient> patientList = patientRepository.findPatient(hospital, name, chartId, birthday, "Y");
+        Page<Patient> patientList = patientRepository.findPatientWithPaging(hospital, name, chartId, birthday, "Y", pageable);
         if (patientList.isEmpty()) {
             return new ArrayList<>();
         }
 
         // Patient 리스트를 PatientListResponseDto 리스트로 만들어서 리턴.
-        return makePatientListResponseDto(patientList);
+        return makePatientListResponseDto(patientList.getContent());
     }
 
     @Transactional
@@ -196,7 +200,6 @@ public class PatientService {
         CodeGroup codeGroup = codeRepository.findAllByCodeGroup("성별코드");
         Map<String, String> genderCodeNameMap = codeGroup.getCodeSet().stream()
                 .collect(Collectors.toMap(Code::getCode, Code::getCodeName));
-
 
         for (Patient patient: patientList) {
             // 성별 코드 이름을 Map 에서 가져오기

@@ -53,8 +53,16 @@ public class PatientController {
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "chartId", required = false) String chartId,
             @RequestParam(value = "birthday", required = false) String birthday,
+            @RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
             @RequestBody PatientListRequestDto dto
     ) {
-        return patientService.search(dto.getHospitalId(), name, chartId, birthday);
+        // pageNo, pageSize 0 이하 값 입력 방지
+        if (pageNo <= 0 || pageSize <= 0) {
+            pageNo = 1;
+            pageSize = 10;
+        }
+
+        return patientService.search(dto.getHospitalId(), name, chartId, birthday, pageNo, pageSize);
     }
 }
